@@ -14,7 +14,7 @@ func denayCreeps(currCreeps int) (int, bool) {
 	var newLevel bool
 	var creepsNow int
 	CreepsDenayd := rand.Intn(500)
-	currCreeps = currCreeps + CreepsDenayd
+	currCreeps += CreepsDenayd
 	if currCreeps >= creepsForNewLevel {
 		creepsNow = currCreeps - creepsForNewLevel
 		newLevel = true
@@ -30,82 +30,38 @@ func upgradeLevel(currLevel uint, currCreeps int) (uint, int) {
 	currCreeps, upgrade = denayCreeps(currCreeps)
 	if currLevel <= maxLevel-1 && upgrade == true {
 		time.Sleep(30 * time.Millisecond)
-		currLevel = currLevel + 1
+		currLevel += 1
 	}
 	return currLevel, currCreeps
 }
 
+func CreateHero(name string) Heroes {
+	return Heroes{name: name, level: 1}
+}
+
+type Heroes struct {
+	name   string
+	level  uint
+	creeps int
+}
+
 func main() {
-	type Heroes struct {
-		name   string
-		level  uint
-		creeps int
-	}
-	listH := make([]Heroes, 0)
 
-	var CurrHero Heroes
+	listH := make([]Heroes, 0, 10)
 
-	var Axe Heroes
-	Axe.name = "Axe"
-	Axe.level = 1
-	Axe.creeps = 0
-	listH = append(listH, Axe)
-
-	var Io Heroes
-	Io.name = "Io"
-	Io.level = 1
-	Io.creeps = 0
-	listH = append(listH, Io)
-
-	var Slark Heroes
-	Slark.name = "Slark"
-	Slark.level = 1
-	Slark.creeps = 0
-	listH = append(listH, Slark)
-
-	var Marci Heroes
-	Marci.name = "Marci"
-	Marci.level = 1
-	Marci.creeps = 0
-	listH = append(listH, Marci)
-
-	var Pudge Heroes
-	Pudge.name = "Pudge"
-	Pudge.level = 1
-	Pudge.creeps = 0
-	listH = append(listH, Pudge)
-
-	var Doom Heroes
-	Doom.name = "Doom"
-	Doom.level = 1
-	Doom.creeps = 0
-	listH = append(listH, Doom)
-
-	var Sven Heroes
-	Sven.name = "Sven"
-	Sven.level = 1
-	Sven.creeps = 0
-	listH = append(listH, Sven)
-
-	var Tusk Heroes
-	Tusk.name = "Tusk"
-	Tusk.level = 1
-	Tusk.creeps = 0
-	listH = append(listH, Tusk)
-
-	var Tiny Heroes
-	Tiny.name = "Tiny"
-	Tiny.level = 1
-	Tiny.creeps = 0
-	listH = append(listH, Tiny)
-
-	var Bane Heroes
-	Bane.name = "Bane"
-	Bane.level = 1
-	Bane.creeps = 0
-	listH = append(listH, Bane)
-
-	var winner string
+	listH = append(listH,
+		CreateHero("Axe"),
+		CreateHero("Io"),
+		CreateHero("Marci"),
+		CreateHero("Pudge"),
+		CreateHero("Doom"),
+		CreateHero("Tusk"),
+		CreateHero("Tiny"),
+		CreateHero("Bane"),
+		CreateHero("Sven"),
+		CreateHero("Slark"),
+	)
+	var winner, looser string
 	to := time.After(timeMatch * time.Second)
 	done := make(chan bool, 1)
 
@@ -115,13 +71,15 @@ func main() {
 
 	if x == 0 {
 		winner = "Radiant"
+		looser = "Dire"
 	} else {
 		winner = "Dire"
+		looser = "Radiant"
 	}
 
 	fmt.Println("Начало матча")
 	go func() {
-		defer fmt.Println("ГГ проебали")
+		defer fmt.Println("ГГ проебали", looser)
 		for {
 			select {
 			case <-to:
@@ -139,7 +97,7 @@ func main() {
 	<-done
 	fmt.Println("Конец матча")
 	for i := 0; i < len(listH); i++ {
-		CurrHero = listH[i]
+		CurrHero := listH[i]
 		fmt.Println(CurrHero.name, "have", CurrHero.level, "level")
 	}
 
