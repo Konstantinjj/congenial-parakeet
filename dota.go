@@ -121,7 +121,7 @@ func main() {
 
 	fmt.Println("Начало матча")
 	go func() {
-		defer fmt.Println("ГГ проебали")
+		defer fmt.Println("ГГ вп")
 		for {
 			select {
 			case <-to:
